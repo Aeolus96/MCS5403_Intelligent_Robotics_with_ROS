@@ -1,0 +1,64 @@
+<!--
+# // I have neither given nor received any unauthorizedaid in completing this work,
+# // nor have I presented someone else's work as my own.
+# // Your Name: Devson Butani
+# // LTU ID: 000732711
+# // Date: 12/13/2022
+-->
+
+<launch>
+    <!-- Start Dynamic Reconfigure GUI. First because slow startup process -->
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_console" args="-t" />
+
+    <!-- Start comms with Joystick-->
+    <node pkg="joy" type="joy_node" name="joy_node" output="screen">
+        <param name="dev" value="/dev/input/js0" />
+        <!-- <param name="dev_ff" value="/dev/input/by-id/usb-Logitech_Logitech_Cordless_RumblePad_2-event-joystick" /> -->
+        <param name="dev_ff" value="/dev/input/by-id/usb-Logitech_Wireless_Gamepad_F710_E4F19CC8-event-joystick" />
+        
+        <param name="autorepeat_rate" value="5" />
+        <!-- Rate in Hz at which a joystick that has a non-changing state will resend the previously sent message -->
+    </node>
+
+    <!-- Start comms with Lidar -->
+    <include file="$(find lidar2d)/launch/hlds.launch" />
+    <!-- Uncomment to run Lidar vizualization tool -->
+    <!-- <include file="$(find lidar2d)/launch/interact.launch" /> -->
+
+    <!-- Start camera nodes for vision input -->
+    <include file="$(find simple_camera_publisher)/launch/snow_blower_camera.launch" />
+
+    <!-- Start comms with PRISM robot controller. Last node for safety -->
+    <include file="$(find prizm_ros)/launch/twist_controller.launch" />
+
+    <!-- Start mat/edge detection node -->
+    <node pkg="term_project_pkg" name="inside_mat" type="inside_mat.py" respawn="true" respawn_delay="10" output="screen">
+        <param name="img_topic_name" type="string" value="/cam_pub_down/image_raw" />
+        <param name="edge_topic_name" type="string" value="/edge" />
+    </node>
+
+        <!-- Start cup/blob detection node -->
+    <node pkg="term_project_pkg" name="detect_cup" type="detect_cup.py" respawn="true" respawn_delay="10" output="screen">
+        <param name="img_topic_name" type="string" value="/cam_pub_front/image_raw" />
+        <param name="blob_topic_name" type="string" value="/blob" />
+    </node>
+
+    <!-- Start object detection node -->
+    <node pkg="term_project_pkg" name="detect_obstacle" type="detect_obstacle.py" respawn="true" respawn_delay="10" output="screen">
+        <param name="obstacle_topic_name" type="string" value="/obstacle" />
+        <param name="scan_topic" type="string" value="/lidar2d/detect/scan" />
+    </node>
+
+    <!-- Start the central command node that makes decisions -->
+    <node pkg="term_project_pkg" name="snow_blower" type="snow_blower.py" respawn="true" respawn_delay="10" output="screen">
+        <param name="twist_topic_name" type="string" value="/prizm/twist_controller/twist_cmd" />
+        <param name="edge_topic_name" type="string" value="/edge" />
+        <param name="blob_topic_name" type="string" value="/blob" />
+        <param name="obstacle_topic_name" type="string" value="/obstacle" />
+        <param name="joy_topic_name" type="string" value="/joy" />
+        <param name="joy_ff_topic_name" type="string" value="/joy/set_feedback" />
+        <param name="front_img_topic_name" type="string" value="/cam_pub_front/image_raw" />
+        <!-- <param name="down_img_topic_name" type="string" value="/cam_pub_down/image_raw" /> -->
+    </node>
+
+</launch>

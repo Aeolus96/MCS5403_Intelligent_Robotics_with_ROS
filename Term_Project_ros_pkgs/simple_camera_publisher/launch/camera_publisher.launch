@@ -1,0 +1,18 @@
+<launch>
+    <arg name="source" default="" />
+
+    <!-- launch the node -->
+    <node name="cam_pub" pkg="simple_camera_publisher" type="cam_pub" respawn="true" respawn_delay="10" output="screen">
+       <!-- <param name="source" type="string" value="$(arg source)" /> -->
+        <param name="source" type="string" value="/dev/v4l/by-path/pci-0000:00:14.0-usb-0:1.3:1.0-video-index0" />
+    </node>
+</launch>
+
+<!-- /dev/v4l/by-path/
+pci-0000:00:14.0-usb-0:1.3:1.0-video-index0
+pci-0000:00:14.0-usb-0:1.3:1.0-video-index1
+pci-0000:00:14.0-usb-0:2:1.0-video-index0
+pci-0000:00:14.0-usb-0:2:1.0-video-index1
+pci-0000:00:14.0-usb-0:6:1.0-video-index0
+pci-0000:00:14.0-usb-0:6:1.0-video-index1
+    -->

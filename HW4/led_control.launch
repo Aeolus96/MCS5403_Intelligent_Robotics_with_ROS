@@ -1,0 +1,16 @@
+<launch>
+    <arg name="bot" default="false" /> <!-- command line can override this value -->
+    <param name="led_color" type="string" value="red" /> <!-- rosparam can change this value -->
+    <param name="hw4_pub_freq" type="double" value="10" /> <!-- command line can override this value -->
+    <include file="$(find tiny_keyboard_reader)/launch/keyboard_reader.launch" />
+    <!-- HW4 node -->
+    <node name="led_control" pkg="hw4_devson_pkg" type="hw4_led_control" />
+
+    <group if="$(arg bot)"> <!-- when bot is true -->    
+        <include file="$(find prizm_ros)/launch/prizm.launch" />
+    </group>
+
+    <group unless="$(arg bot)"> <!-- when bot is false, run sim -->
+        <include file="$(find prizm_ros)/launch/led_sim.launch" />
+    </group>
+</launch>
