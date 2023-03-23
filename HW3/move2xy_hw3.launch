@@ -1,0 +1,13 @@
+<!--
+// I have neither given nor received any unauthorizedaid in completing this work,
+// nor have I presented someone else's work as my own.
+// Your Name: Devson Butani
+// LTU ID: 000732711
+// Date: 09/21/2022
+-->
+
+<launch>
+    <node pkg="turtlesim" name="turtlesim_node" type="turtlesim_node" />
+    <node pkg="turtlesim_tst_pkg" name="move2xy_py" type="move2xy_hw3.py" 
+          output="screen" launch-prefix="gnome-terminal --geometry=50x20+700+300 --"/>
+</launch>

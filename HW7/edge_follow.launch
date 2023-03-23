@@ -1,0 +1,32 @@
+<launch>
+	<arg name="bot" default="false" />
+	<group unless="$(arg bot)">		<!-- when bot is false: invoke simulation -->
+		<include file="$(find simple_sim_2mats)/launch/2mats.launch" />
+		<!-- SIM: uses common script, sim camera input, sim bot output -->
+		<node name="two_mats_edge_follow" pkg="two_mats_pkg" type="two_mats_edge_follower.py" required="true" output="screen">
+			<param name="img_topic_name" type="string" value="camera_view" />
+			<param name="twist_topic_name" type="string" value="cmd_vel" />
+		</node>
+	</group>
+
+	<group if="$(arg bot)">		<!-- when bot is true: invoke Prizm bot -->
+		<node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_console" args="-t" />
+		<include file="$(find simple_camera_publisher)/launch/camera_publisher.launch">
+			<arg name="source" value="/dev/v4l/by-id/usb-KYE_Systems_Corp._USB_Camera_200901010001-video-index0" />
+		</include>
+		<include file="$(find prizm_ros)/launch/twist_controller.launch" />
+		<!-- BOT: uses common script, camera input, bot output -->
+		<node name="two_mats_edge_follow" pkg="two_mats_pkg" type="two_mats_edge_follower.py" required="true" output="screen">
+			<param name="img_topic_name" type="string" value="cam_pub/image_raw" />
+			<param name="twist_topic_name" type="string" value="prizm/twist_controller/twist_cmd" />
+		</node>
+	</group>
+</launch>
+
+<!-- 
+# // I have neither given nor received any unauthorizedaid in completing this work,
+# // nor have I presented someone else's work as my own.
+# // Your Name: Devson Butani
+# // LTU ID: 000732711
+# // Date: 10/31/2022
+-->

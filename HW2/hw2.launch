@@ -1,0 +1,28 @@
+<!--
+// I have neither given nor received any unauthorizedaid in completing this work,
+// nor have I presented someone else's work as my own.
+// Your Name: Devson Butani
+// LTU ID: 000732711
+// Date: 09/14/2022
+-->
+<launch>
+    <param name="/hw2_sub_freq" type="double" value="0.5" />
+    <param name="/hw2_pub_freq" type="double" value="10" />
+
+    <node name="hw2_radioStation" pkg="hw2" type="hw2_sub_str" 
+          output="screen" launch-prefix="gnome-terminal --geometry=70x20+700+300 --" />
+    <node name="hw2_pub_int" pkg="hw2" type="hw2_pub_int" 
+          output="screen" launch-prefix="gnome-terminal --geometry=60x10+50+50 --" />
+    <node name="hw2_pub_str" pkg="hw2" type="hw2_pub_str" 
+          output="screen" launch-prefix="gnome-terminal --geometry=60x10+50+300 --" />
+    <!--Changer terminal for debugging and checking flow-->
+    <node name="hw2_changer" pkg="hw2" type="hw2_changer"
+          output="screen" launch-prefix="gnome-terminal --geometry=70x10+700+50 --" />
+</launch>
+<!--
+    gnome-terminal - -geometry=70x10+700+50
+    gnome-terminal - -geometry=70x20+700+300
+
+    gnome-terminal - -geometry=60x10+50+50
+    gnome-terminal - -geometry=60x10+50+300
+-->

@@ -1,0 +1,24 @@
+<launch>
+    <!-- dyn reconfigure -->
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_console" args="-t"/>
+
+    <arg name="bot" default="false" />
+    <group unless="$(arg bot)">        <!-- when bot is false: invoke simulation -->
+        <param name="/out_topic_name" type="string" value="/turtle1/cmd_vel" />
+        <node pkg="turtlesim" type="turtlesim_node" name="turtlesim_node" output="screen" />
+    </group>
+    <group if="$(arg bot)">        <!-- when bot is true: invoke Prizm bot -->
+        <param name="/out_topic_name" type="string" value="/prizm/twist_controller/twist_cmd" />
+        <include file="$(find prizm_ros)/launch/twist_controller.launch" />
+    </group>
+    
+    <node pkg="turtlesim_tst_pkg" name="go2dyn" type="go2dyn.py" output="screen" />
+</launch>
+
+<!--
+// I have neither given nor received any unauthorizedaid in completing this work,
+// nor have I presented someone else's work as my own.
+// Your Name: Devson Butani
+// LTU ID: 000732711
+// Date: 10/13/2022
+-->

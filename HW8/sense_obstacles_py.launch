@@ -1,0 +1,21 @@
+<launch>
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_console" args="-t"/> 
+    <include file="$(find prizm_ros)/launch/twist_controller.launch" />
+    <include file="$(find lidar2d)/launch/hlds.launch" />
+    <!-- <include file="$(find lidar2d)/launch/interact.launch" /> -->
+
+    <!-- launch the node -->
+    <node name="sense_obstacles_py" pkg="sense_obstacles" type="sense_obstacles_py.py" respawn="true" respawn_delay="10" output="screen">
+        <!-- Use a specific laserscan path -->
+        <param name="scan_topic" type="string" value="/lidar2d/detect/scan" />
+        <param name="twist_topic_name" type="string" value="/prizm/twist_controller/twist_cmd" />
+    </node>
+</launch>
+
+<!--
+# // I have neither given nor received any unauthorizedaid in completing this work,
+# // nor have I presented someone else's work as my own.
+# // Your Name: Devson Butani
+# // LTU ID: 000732711
+# // Date: 11/3/2022
+-->
